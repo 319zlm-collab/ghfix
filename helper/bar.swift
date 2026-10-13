@@ -3441,6 +3441,11 @@ func reconcile(_ why: String, restart: Bool = true) {
         tlog("wm: now \(omni ? "omniwm" : "aerospace") (\(why)), relabelling the bar")
         rebuildSurfaces([:])
         repaint()
+        // The bar usually starts BEFORE OmniWM at login, so the startup
+        // ask found no manager to write for and stopped; this transition
+        // is the moment there is one. Idempotent: a second run with the
+        // same numbers rewrites nothing.
+        if omni { syncTopGaps() }
     }
     if restart { reconcileStep = 0 }
     reconcileRetry?.cancel()
